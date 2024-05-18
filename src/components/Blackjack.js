@@ -13,17 +13,53 @@ const Blackjack = ({ playerName }) => {
   const [playerHandValue, setPlayerHandValue] = useState(0);
   const [dealerHandValue, setDealerHandValue] = useState(0);
 
+  const calculateHandValue = (hand) => {
+    let value = 0;
+    let numAces = 0;
+    hand.forEach(card => {
+      if (card) {
+        value += getCardValue(card);
+        if (card.rank === 'ace') {
+          numAces++;
+        }
+      }
+    });
+    while (value > 21 && numAces > 0) {
+      value -= 10;
+      numAces--;
+    }
+    return value;
+  };
+
+  const checkForNaturals = () => {
+    const playerValue = calculateHandValue(playerHand);
+    const dealerValue = calculateHandValue(dealerHand);
+    if (playerValue === 21 || dealerValue === 21) {
+      if (playerValue === 21 && dealerValue === 21) {
+        setGameResult("It's a tie with Naturals!");
+      } else if (playerValue === 21) {
+        setPlayerBalance(playerBalance + playerBet * 1.5);
+        setGameResult("Blackjack! You win!");
+      } else {
+        setPlayerBalance(playerBalance - playerBet);
+        setGameResult("Dealer has Blackjack. You lose!");
+      }
+      setGameStarted(false);
+      setPlayerTurn(false);
+    }
+  };
+
   useEffect(() => {
     if (gameStarted) {
       setPlayerHandValue(calculateHandValue(playerHand));
       setDealerHandValue(calculateHandValue(dealerHand));
       checkForNaturals();
     }
-  }, [playerHand, dealerHand]);
+  }, [playerHand, dealerHand, gameStarted, calculateHandValue, checkForNaturals]);
 
   useEffect(() => {
     setDealerHandValue(calculateHandValue(dealerHand));
-  }, [dealerHand]);
+  }, [dealerHand, calculateHandValue]);
 
   const initializeDeck = () => {
     const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
@@ -83,42 +119,6 @@ const Blackjack = ({ playerName }) => {
       return 10;
     } else {
       return parseInt(card.rank);
-    }
-  };
-
-  const calculateHandValue = (hand) => {
-    let value = 0;
-    let numAces = 0;
-    hand.forEach(card => {
-      if (card) {
-        value += getCardValue(card);
-        if (card.rank === 'ace') {
-          numAces++;
-        }
-      }
-    });
-    while (value > 21 && numAces > 0) {
-      value -= 10;
-      numAces--;
-    }
-    return value;
-  };
-
-  const checkForNaturals = () => {
-    const playerValue = calculateHandValue(playerHand);
-    const dealerValue = calculateHandValue(dealerHand);
-    if (playerValue === 21 || dealerValue === 21) {
-      if (playerValue === 21 && dealerValue === 21) {
-        setGameResult("It's a tie with Naturals!");
-      } else if (playerValue === 21) {
-        setPlayerBalance(playerBalance + playerBet * 1.5);
-        setGameResult("Blackjack! You win!");
-      } else {
-        setPlayerBalance(playerBalance - playerBet);
-        setGameResult("Dealer has Blackjack. You lose!");
-      }
-      setGameStarted(false);
-      setPlayerTurn(false);
     }
   };
 
