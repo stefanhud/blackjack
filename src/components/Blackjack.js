@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './Blackjack.css';
 
 const Blackjack = ({ playerName }) => {
@@ -13,7 +13,18 @@ const Blackjack = ({ playerName }) => {
   const [playerHandValue, setPlayerHandValue] = useState(0);
   const [dealerHandValue, setDealerHandValue] = useState(0);
 
-  const calculateHandValue = (hand) => {
+  const getCardValue = (card) => {
+    if (!card) return 0;
+    if (card.rank === 'ace') {
+      return 11;
+    } else if (['jack', 'queen', 'king'].includes(card.rank)) {
+      return 10;
+    } else {
+      return parseInt(card.rank);
+    }
+  };
+
+  const calculateHandValue = useCallback((hand) => {
     let value = 0;
     let numAces = 0;
     hand.forEach(card => {
@@ -29,9 +40,9 @@ const Blackjack = ({ playerName }) => {
       numAces--;
     }
     return value;
-  };
+  }, []);
 
-  const checkForNaturals = () => {
+  const checkForNaturals = useCallback(() => {
     const playerValue = calculateHandValue(playerHand);
     const dealerValue = calculateHandValue(dealerHand);
     if (playerValue === 21 || dealerValue === 21) {
@@ -47,7 +58,7 @@ const Blackjack = ({ playerName }) => {
       setGameStarted(false);
       setPlayerTurn(false);
     }
-  };
+  }, [calculateHandValue, playerBet, playerHand, dealerHand, playerBalance]);
 
   useEffect(() => {
     if (gameStarted) {
@@ -109,17 +120,6 @@ const Blackjack = ({ playerName }) => {
 
   const handleBetChange = (e) => {
     setPlayerBet(Number(e.target.value));
-  };
-
-  const getCardValue = (card) => {
-    if (!card) return 0;
-    if (card.rank === 'ace') {
-      return 11;
-    } else if (['jack', 'queen', 'king'].includes(card.rank)) {
-      return 10;
-    } else {
-      return parseInt(card.rank);
-    }
   };
 
   const playerHit = () => {
