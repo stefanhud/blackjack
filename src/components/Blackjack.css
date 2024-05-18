@@ -1,0 +1,59 @@
+.blackjack {
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.hand {
+  margin: 20px 0;
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+}
+
+.cards img {
+  margin: 0 5px;
+  width: 100px;
+}
+
+.betting {
+  margin: 20px 0;
+}
+
+.betting input {
+  padding: 5px;
+  font-size: 16px;
+  width: 100px;
+  margin-right: 10px;
+}
+
+.betting button {
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.start-screen {
+  text-align: center;
+  margin-top: 20%;
+}
+
+.start-screen input {
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.start-screen button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.hand button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin: 10px;
+  cursor: pointer;
+}
