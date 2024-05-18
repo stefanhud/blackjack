@@ -20,11 +20,9 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: ./client
 
     - name: Build React app
       run: npm run build
-      working-directory: ./client
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
@@ -32,5 +30,5 @@ jobs:
         app-name: stevoblackjack
         slot-name: production
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: ./client/build
+        package: ./build
 
