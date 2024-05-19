@@ -172,7 +172,7 @@ const Blackjack = ({ playerName }) => {
     }
     setDealerHand(newDealerHand);
     determineWinner(newDealerHand);
-  }, [dealerHand, deck]);
+  }, [dealerHand, deck, determineWinner]);
 
   const determineWinner = useCallback((finalDealerHand) => {
     const playerValue = calculateHandValue(playerHand);
@@ -225,17 +225,17 @@ const Blackjack = ({ playerName }) => {
         )}
       </div>
       <div className="hand">
-        <h2>Dealer's Hand (Value: {dealerHandValue})</h2>
-        <div className="cards">
-          {dealerHand.map((card, index) => (
-            <img key={index} src={getCardImage(card)} alt={`${card?.rank} of ${card?.suit}`} />
-          ))}
-        </div>
-      </div>
-      <h2>{gameResult}</h2>
-      <h3>Balance: ${playerBalance}</h3>
+    <h2>Dealer's Hand (Value: {dealerHandValue})</h2>
+    <div className="cards">
+      {dealerHand.map((card, index) => (
+        <img key={index} src={getCardImage(card)} alt={`${card?.rank} of ${card?.suit}`} />
+      ))}
     </div>
-  );
+  </div>
+  <h2>{gameResult}</h2>
+  <h3>Balance: ${playerBalance}</h3>
+</div>
+);
 };
 
 export default Blackjack;
