@@ -163,17 +163,6 @@ const Blackjack = ({ playerName }) => {
     }
   };
 
-  const dealerPlay = useCallback(() => {
-    let dealerValue = calculateHandValue(dealerHand);
-    const newDealerHand = [...dealerHand];
-    while (dealerValue < 17) {
-      newDealerHand.push(deck.pop());
-      dealerValue = calculateHandValue(newDealerHand);
-    }
-    setDealerHand(newDealerHand);
-    determineWinner(newDealerHand);
-  }, [dealerHand, deck, determineWinner]);
-
   const determineWinner = useCallback((finalDealerHand) => {
     const playerValue = calculateHandValue(playerHand);
     const dealerValue = calculateHandValue(finalDealerHand);
@@ -190,6 +179,17 @@ const Blackjack = ({ playerName }) => {
     }
     setGameStarted(false);
   }, [playerHand, playerBet, playerBalance]);
+
+  const dealerPlay = useCallback(() => {
+    let dealerValue = calculateHandValue(dealerHand);
+    const newDealerHand = [...dealerHand];
+    while (dealerValue < 17) {
+      newDealerHand.push(deck.pop());
+      dealerValue = calculateHandValue(newDealerHand);
+    }
+    setDealerHand(newDealerHand);
+    determineWinner(newDealerHand);
+  }, [dealerHand, deck, determineWinner]);
 
   return (
     <div className="blackjack">
@@ -225,17 +225,17 @@ const Blackjack = ({ playerName }) => {
         )}
       </div>
       <div className="hand">
-    <h2>Dealer's Hand (Value: {dealerHandValue})</h2>
-    <div className="cards">
-      {dealerHand.map((card, index) => (
-        <img key={index} src={getCardImage(card)} alt={`${card?.rank} of ${card?.suit}`} />
-      ))}
+        <h2>Dealer's Hand (Value: {dealerHandValue})</h2>
+        <div className="cards">
+          {dealerHand.map((card, index) => (
+            <img key={index} src={getCardImage(card)} alt={`${card?.rank} of ${card?.suit}`} />
+          ))}
+        </div>
+      </div>
+      <h2>{gameResult}</h2>
+      <h3>Balance: ${playerBalance}</h3>
     </div>
-  </div>
-  <h2>{gameResult}</h2>
-  <h3>Balance: ${playerBalance}</h3>
-</div>
-);
+  );
 };
 
 export default Blackjack;
