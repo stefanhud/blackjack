@@ -101,25 +101,34 @@ const Blackjack = ({ playerName }) => {
     setDealerHandValue(calculateHandValue(dealerHand));
   }, [dealerHand]);
 
-  const dealInitialCards = useCallback(() => {
-    const playerInitialHand = [deck.pop(), deck.pop()];
-    const dealerInitialHand = [deck.pop()]; // Only one card for the dealer initially
+  const dealInitialCards = useCallback((newDeck) => {
+    const playerInitialHand = [newDeck.pop(), newDeck.pop()];
+    const dealerInitialHand = [newDeck.pop()]; // Only one card for the dealer initially
     setPlayerHand(playerInitialHand);
     setDealerHand(dealerInitialHand);
-  }, [deck]);
+    setDeck(newDeck);
+  }, []);
+
+  const resetGameState = () => {
+    setPlayerHand([]);
+    setDealerHand([]);
+    setGameResult('');
+    setPlayerTurn(true);
+    setDoubleDownActive(false);
+    setPlayerHandValue(0);
+    setDealerHandValue(0);
+  };
 
   const startGame = () => {
     if (playerBet < 2 || playerBet > 500) {
       setGameResult("Bet must be between $2 and $500.");
       return;
     }
-    setGameResult('');
+    resetGameState();
     setGameStarted(true);
-    setPlayerTurn(true);
-    setDoubleDownActive(false);
-    setDeck(deckMemo);
+    const newDeck = initializeDeck();
     setTimeout(() => {
-      dealInitialCards();
+      dealInitialCards(newDeck);
     }, 1000);
   };
 
