@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './Blackjack.css';
 
 const getCardValue = (card) => {
@@ -64,8 +64,6 @@ const Blackjack = ({ playerName }) => {
   const [playerHandValue, setPlayerHandValue] = useState(0);
   const [dealerHandValue, setDealerHandValue] = useState(0);
   const [doubleDownActive, setDoubleDownActive] = useState(false);
-
-  const deckMemo = useMemo(() => initializeDeck(), []);
 
   const checkForNaturals = useCallback(() => {
     const playerValue = calculateHandValue(playerHand);
