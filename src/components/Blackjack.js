@@ -12,6 +12,7 @@ const Blackjack = ({ playerName }) => {
   const [playerTurn, setPlayerTurn] = useState(true);
   const [playerHandValue, setPlayerHandValue] = useState(0);
   const [dealerHandValue, setDealerHandValue] = useState(0);
+  const [doubleDownActive, setDoubleDownActive] = useState(false);
 
   const getCardValue = (card) => {
     if (!card) return 0;
@@ -47,13 +48,13 @@ const Blackjack = ({ playerName }) => {
     const dealerValue = calculateHandValue(dealerHand);
     if (playerValue === 21 || dealerValue === 21) {
       if (playerValue === 21 && dealerValue === 21) {
-        setGameResult("It's a tie with Naturals!");
+        setGameResult("Je to remíza s Naturalmi!");
       } else if (playerValue === 21) {
         setPlayerBalance(playerBalance + playerBet * 1.5);
-        setGameResult("Blackjack! You win!");
+        setGameResult("Blackjack! Vyhrali ste!");
       } else {
         setPlayerBalance(playerBalance - playerBet);
-        setGameResult("Dealer has Blackjack. You lose!");
+        setGameResult("Krupiér má Blackjack. Prehrali ste!");
       }
       setGameStarted(false);
       setPlayerTurn(false);
@@ -129,7 +130,7 @@ const Blackjack = ({ playerName }) => {
     setPlayerHandValue(playerValue);
     if (playerValue > 21) {
       setPlayerBalance(playerBalance - playerBet);
-      setGameResult("You went bust! You lose!");
+      setGameResult("Prekročili ste 21! Prehrali ste!");
       setGameStarted(false);
       setPlayerTurn(false);
     }
@@ -138,6 +139,16 @@ const Blackjack = ({ playerName }) => {
   const playerStand = () => {
     setPlayerTurn(false);
     dealerPlay();
+  };
+
+  const playerDoubleDown = () => {
+    const newBet = playerBet * 2;
+    setPlayerBet(newBet);
+    setDoubleDownActive(true);
+    playerHit();
+    if (playerHandValue <= 21) {
+      playerStand();
+    }
   };
 
   const dealerPlay = () => {
@@ -157,12 +168,12 @@ const Blackjack = ({ playerName }) => {
     setDealerHandValue(dealerValue);
     if (dealerValue > 21 || playerValue > dealerValue) {
       setPlayerBalance(playerBalance + playerBet);
-      setGameResult("You win!");
+      setGameResult("Vyhrali ste!");
     } else if (playerValue < dealerValue) {
       setPlayerBalance(playerBalance - playerBet);
-      setGameResult("You lose!");
+      setGameResult("Prehrali ste!");
     } else {
-      setGameResult("It's a tie!");
+      setGameResult("Je to remíza!");
     }
     setGameStarted(false);
   };
@@ -170,11 +181,11 @@ const Blackjack = ({ playerName }) => {
   return (
     <div className="blackjack">
       <h1>Blackjack</h1>
-      <h2>Welcome, {playerName}</h2>
+      <h2>Vitajte, {playerName}</h2>
       <div className="betting">
         <input
           type="number"
-          placeholder="Enter your bet"
+          placeholder="Zadajte vašu stávku"
           value={playerBet}
           onChange={handleBetChange}
           min="2"
@@ -182,11 +193,11 @@ const Blackjack = ({ playerName }) => {
           disabled={gameStarted}
         />
         <button onClick={startGame} disabled={playerBet < 2 || playerBet > 500 || gameStarted}>
-          Place Bet and Start Game
+          Vložiť stávku a začať hru
         </button>
       </div>
       <div className="hand">
-        <h2>Player Hand (Value: {playerHandValue})</h2>
+        <h2>Ruka hráča (Hodnota: {playerHandValue})</h2>
         <div className="cards">
           {playerHand.map((card, index) => (
             <img key={index} src={getCardImage(card)} alt={`${card?.rank} of ${card?.suit}`} />
@@ -196,11 +207,12 @@ const Blackjack = ({ playerName }) => {
           <div>
             <button onClick={playerHit}>Hit</button>
             <button onClick={playerStand}>Stand</button>
+            <button onClick={playerDoubleDown} disabled={doubleDownActive}>Double Down</button>
           </div>
         )}
       </div>
       <div className="hand">
-        <h2>Dealer Hand (Value: {dealerHandValue})</h2>
+        <h2>Ruka krupiéra (Hodnota: {dealerHandValue})</h2>
         <div className="cards">
           {dealerHand.map((card, index) => (
             <img key={index} src={getCardImage(card)} alt={`${card?.rank} of ${card?.suit}`} />
@@ -208,7 +220,7 @@ const Blackjack = ({ playerName }) => {
         </div>
       </div>
       <h2>{gameResult}</h2>
-      <h3>Balance: ${playerBalance}</h3>
+      <h3>Zostatok: ${playerBalance}</h3>
     </div>
   );
 };

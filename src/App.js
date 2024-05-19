@@ -14,15 +14,15 @@ function App() {
     <div className="App">
       {!gameStarted ? (
         <div className="start-screen">
-          <h1>Welcome to Blackjack</h1>
+          <h1>Vitajte v Blackjacku</h1>
           <input
             type="text"
-            placeholder="Enter your name"
+            placeholder="Zadajte vaše meno"
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
           />
           <button onClick={startGame} disabled={!playerName}>
-            Start Game
+            Začať hru
           </button>
         </div>
       ) : (
